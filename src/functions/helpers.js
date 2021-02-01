@@ -32,32 +32,23 @@ export async function setKV(key, value, metadata, expirationTtl) {
 
 export async function notifySlack(monitor, operational) {
   const payload = {
+    username: "Status Page",
+    icon_url: "https://status.watts.one/logo-192x192.png",
     attachments: [
       {
         color: operational ? '#36a64f' : '#f2c744',
-        blocks: [
+        text: `Monitor *${
+          monitor.name
+        }* changed status to *${getOperationalLabel(operational)}*`,
+        fields: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `Monitor *${
-                monitor.name
-              }* changed status to *${getOperationalLabel(operational)}*`,
-            },
-          },
-          {
-            type: 'context',
-            elements: [
-              {
-                type: 'mrkdwn',
-                text: `${operational ? ':white_check_mark:' : ':x:'} \`${
-                  monitor.method ? monitor.method : 'GET'
-                } ${monitor.url}\` - :eyes: <${
-                  config.settings.url
-                }|Status Page>`,
-              },
-            ],
-          },
+            title: `${operational ? ':white_check_mark:' : ':x:'}`,
+            value: `${
+              monitor.method ? monitor.method : 'GET'
+            } ${monitor.url}\` - :eyes: <${
+              config.settings.url
+            }|Status Page>`
+          }
         ],
       },
     ],
